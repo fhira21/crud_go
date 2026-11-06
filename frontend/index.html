@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <div class="brand">
+                <div class="logo-icon">👥</div>
+                <div>
+                    <h1 class="brand-title">Employee Management</h1>
+                    <p class="brand-subtitle">Golang & MySQL CRUD Application</p>
+                </div>
+            </div>
+            <button id="openAddModalBtn" class="btn btn-primary">
+                <span class="btn-icon">+</span> Add Employee
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container main-content">
+        <!-- Toast Notification Area -->
+        <div id="toast" class="toast hidden" role="alert">
+            <span id="toastIcon" class="toast-icon">ℹ️</span>
+            <span id="toastMessage" class="toast-message">Message</span>
+        </div>
+
+        <!-- Employee Table Card -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title-group">
+                    <h2 class="card-title">Employee Records</h2>
+                    <span id="employeeCount" class="badge">0 Total</span>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search by name, NPWP, or address...">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">ID</th>
+                            <th>Name</th>
+                            <th>NPWP</th>
+                            <th>Address</th>
+                            <th style="width: 170px; text-align: center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeeTableBody">
+                        <!-- Dynamic rows loaded by script.js -->
+                    </tbody>
+                </table>
+
+                <!-- Empty State Message -->
+                <div id="emptyState" class="empty-state hidden">
+                    <div class="empty-icon">📂</div>
+                    <h3>No Employees Found</h3>
+                    <p>There are currently no employee records in the MySQL database.</p>
+                    <button class="btn btn-primary" onclick="openAddModal()">Add First Employee</button>
+                </div>
+
+                <!-- Loading State Indicator -->
+                <div id="loadingState" class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Connecting to Golang REST API...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Form: Add / Edit Employee -->
+    <div id="employeeModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New Employee</h3>
+                <button type="button" class="close-btn" id="closeModalBtn" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="employeeForm">
+                <div class="modal-body">
+                    <!-- Hidden input to hold employee ID when editing -->
+                    <input type="hidden" id="employeeId" value="">
+
+                    <div class="form-group">
+                        <label for="employeeName">Full Name <span class="required">*</span></label>
+                        <input type="text" id="employeeName" class="form-control" placeholder="e.g. John Doe" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="employeeNPWP">NPWP (Tax ID) <span class="required">*</span></label>
+                        <input type="text" id="employeeNPWP" class="form-control" placeholder="e.g. 01.234.567.8-901.000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="employeeAddress">Address <span class="required">*</span></label>
+                        <textarea id="employeeAddress" class="form-control" rows="3" placeholder="e.g. Jl. Sudirman No. 123, Jakarta" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveEmployeeBtn">
+                        <span id="saveBtnSpinner" class="btn-spinner hidden"></span>
+                        <span id="saveBtnText">Save Employee</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="deleteModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+        <div class="modal-card modal-confirm">
+            <div class="modal-header">
+                <h3>Confirm Deletion</h3>
+                <button type="button" class="close-btn" id="closeDeleteModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="warning-icon">⚠️</div>
+                <p>Are you sure you want to delete employee <strong id="deleteEmployeeName"></strong> (ID: <span id="deleteEmployeeId"></span>)?</p>
+                <p class="text-muted">This action will remove the record permanently from the MySQL database.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

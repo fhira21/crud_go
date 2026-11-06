@@ -1,0 +1,21 @@
+# Environment variables
+.env
+
+# Binaries and executables
+main
+crud-employee
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# OS files
+.DS_Store
+Thumbs.db
